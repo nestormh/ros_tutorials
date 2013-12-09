@@ -60,9 +60,18 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
 
   connect(update_timer_, SIGNAL(timeout()), this, SLOT(onUpdate()));
 
-  nh_.setParam("background_r", DEFAULT_BG_R);
-  nh_.setParam("background_g", DEFAULT_BG_G);
-  nh_.setParam("background_b", DEFAULT_BG_B);
+//   nh_.setParam("background_r", DEFAULT_BG_R);
+//   nh_.setParam("background_g", DEFAULT_BG_G);
+//   nh_.setParam("background_b", DEFAULT_BG_B);
+
+  int r = DEFAULT_BG_R;
+  int g = DEFAULT_BG_G;
+  int b = DEFAULT_BG_B;
+
+  ros::NodeHandle nh_local("~");
+  nh_local.param("background_r", r, r);
+  nh_local.param("background_g", g, g);
+  nh_local.param("background_b", b, b);
 
   QVector<QString> turtles;
   turtles.append("box-turtle.png");
@@ -96,6 +105,9 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   width_in_meters_ = (width() - 1) / meter_;
   height_in_meters_ = (height() - 1) / meter_;
   spawnTurtle("", width_in_meters_ / 2.0, height_in_meters_ / 2.0, 0);
+  
+  path_image_.fill(qRgb(r, g, b));
+  update();
 }
 
 TurtleFrame::~TurtleFrame()
